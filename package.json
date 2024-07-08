@@ -1,0 +1,12 @@
+{
+  "name": "static-hosting",
+  "version": "1.0.0",
+  "description": "Version names are `yyyy/dd/mm_hh-mm_vv`\r > Year, Day, Month, Hour, Minute, Version",
+  "main": "index.html",
+  "scripts": {
+    "generate-directory-index": "node generate-directory-index.js",
+    "build": "npm run generate-directory-index"
+  },
+  "author": "Caden Finkelstein",
+  "license": "ISC"
+}
