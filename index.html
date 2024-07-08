@@ -6,16 +6,34 @@
     </title>
     <style>
       *,*::before,*::after {
+        --color-accent: #ae7ce4;
+        --color-accent-hover: #75559f;
+        
         color: white;
         box-sizing: border-box;
+      }
+      * a {
+        color: var(--color-accent);
+      }
+      * a:hover {
+        color: var(--color-accent-hover);
       }
       :root {
         font-family: 'Segoe UI', 'Segoe UI Bold', 'Segoe UI Italic', sans-serif;
       }
       body {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+        padding: 10px 20px;
         background: rgb(25,25,25);
       }
       .content {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
         padding: 10px;
         background: rgb(35,35,35);
         border-radius: 5px;
