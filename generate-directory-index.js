@@ -42,11 +42,13 @@ function generateIndex(dir) {
         </style>
       </head>
       <body>
-        <a class="go-home" href="${parentDir ? `/${parentDir}` : "/"}" rel="noopener noreferrer" target="_self">Go to <span>..</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
         <div class="files">
           <ul id="fileList">
+            <li class="file-item back" style="background:none;width:auto;border:none;text-decoration:none;">
+              <a href="${parentDir ? `/${parentDir}` : "/"}" rel="noopener noreferrer" target="_self" style="text-decoration:none;font-size:2em;">../</a>
+            </li>
             ${files.map(file => `
               <li class="file-item">
                 <a href="${relativeDir ? `/${relativeDir}` : ""}/${file.name}${file.isDirectory ? "/" : ""}" style="${file.isDirectory ? "background: #ae7ce4; color: rgb(25,25,25); padding: 0 20px; border-radius: 5px;" : ""}">${file.name}</a>
