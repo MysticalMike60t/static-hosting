@@ -43,7 +43,7 @@ function generateIndex(dir) {
 
         fileList.innerHTML = sortedFiles.map(file => \`
           <li class="file-item">
-            <a href="${file.name}${file.isDirectory ? '/' : ''}">${file.name}</a>
+            <a href="\${file.name}\${file.isDirectory ? '/' : ''}">\${file.name}</a>
           </li>
         \`).join('');
       }</script>
