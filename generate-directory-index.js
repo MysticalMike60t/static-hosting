@@ -11,10 +11,35 @@ function generateIndex(dir) {
       name: file,
       isDirectory: stats.isDirectory(),
     };
-  });
+  }).filter(file => file.name !== "index.html");
 
   const relativeDir = path.relative(rootDir, dir).replace(/\\/g, "/");
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
+
+  function getDirectoryInfo(dir) {
+    let totalSize = 0;
+    let fileCount = 0;
+  
+    function calculateDirSize(directory) {
+      const files = fs.readdirSync(directory);
+  
+      files.forEach(file => {
+        const filePath = path.join(directory, file);
+        const stats = fs.statSync(filePath);
+  
+        if (stats.isDirectory()) {
+          calculateDirSize(filePath);
+        } else if (file !== "index.html") {
+          totalSize += stats.size;
+          fileCount += 1;
+        }
+      });
+    }
+  
+    calculateDirSize(dir);
+  
+    return { totalSize, fileCount };
+  }
 
   const content = `
     <!doctype html>
@@ -39,21 +64,24 @@ function generateIndex(dir) {
           .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 10px; border: none; outline: 0; border-radius: 5px; font-size: 1em; background: #2d2d2d; }
           .go-home { margin: 20px; }
           .go-home span { color: var(--color-accent) !important; }
+          .file-info { margin-top: 20px; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; padding: 0 20px; color: #fff; }
         </style>
       </head>
       <body>
+        <a class="go-home" href="${parentDir ? `/${parentDir}` : "/"}" rel="noopener noreferrer" target="_self">Go to <span>..</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
         <div class="files">
           <ul id="fileList">
-            <li class="file-item back" style="background:none;width:auto;border:none;text-decoration:none;">
-              <a href="${parentDir ? `/${parentDir}` : "/"}" rel="noopener noreferrer" target="_self" style="text-decoration:none;font-size:2em;">../</a>
-            </li>
             ${files.map(file => `
               <li class="file-item">
-                <a href="${relativeDir ? `/${relativeDir}` : ""}/${file.name}${file.isDirectory ? "/" : ""}" style="${file.isDirectory ? "background: #ae7ce4; color: rgb(25,25,25); padding: 0 20px; border-radius: 5px;" : ""}">${file.name}</a>
+                <a href="${relativeDir ? `/${relativeDir}` : ""}/${file.name}${file.isDirectory ? "/" : ""}" data-name="${file.name}" data-is-directory="${file.isDirectory}" style="${file.isDirectory ? "background: #ae7ce4; color: rgb(25,25,25); padding: 0 20px; border-radius: 5px;" : ""}">${file.name}</a>
               </li>`).join("")}
           </ul>
+        </div>
+        <div class="file-info">
+          <p>Total size: ${getDirectoryInfo(dir).totalSize} bytes</p>
+          <p>Number of files: ${getDirectoryInfo(dir).fileCount}</p>
         </div>
         <script>
           function filterFiles() {
