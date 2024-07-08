@@ -1,4 +1,5 @@
 # Sources
+> Remove the links: `[-] \[.*?\]\((.*?)\)` and `$1`
 
 ### Websites
 Websites that host gore or generally unrestricted videos:
