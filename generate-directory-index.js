@@ -14,15 +14,42 @@ function generateIndex(dir) {
   });
 
   const content = `
-    <html>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${dir}</title>
+    <style>
+    * {
+      --color-accent: #ae7ce4;
+      --color-accent-hover: #75559f;
+    }
+    *,*::before,*::after {box-sizing: border-box;color:white;}
+    :root {font-family: 'Segoe UI', 'Segoe UI Bold', 'Segoe UI Italic', sans-serif;}
+    body {background: rgb(25,25,25);display:flex;align-items:center;justify-content:flex-start;flex-direction:column;padding:20px 10px;}
+    .title {font-size:2em;}
+    .files {background:rgb(35,35,35);border-radius:5px;box-shadow:0 0 5px 0 rgba(0,0,0,0.1);padding: 5px 20px;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;}
+    ul {margin:0;padding:0;list-style:none;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;}
+    li {width:100%;height:auto;background:rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;flex-direction:column;}
+    li:hover {background:rgba(0,0,0,0.2);}
+    a {text-decoration:none;color:var(--color-accent);}
+    a:hover {text-decoration:underline;color:var(--color-accent-hover);}
+    </style>
+    </head>
     <body>
-      <ul>
-        ${files.map(file => `
-          <li>
-            <a href="${file.name}${file.isDirectory ? '/' : ''}">${file.name}</a>
-          </li>
-        `).join('')}
-      </ul>
+    <h1 className="title">
+      ${dir}
+    </h1>
+    <div class="files">
+    <ul>
+      ${files.map(file => `
+        <li>
+          <a href="${file.name}${file.isDirectory ? '/' : ''}">${file.name}</a>
+        </li>
+      `).join('')}
+    </ul>
+    </div>
     </body>
     </html>
   `;
