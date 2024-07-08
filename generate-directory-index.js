@@ -41,11 +41,11 @@ function generateIndex(dir) {
           sortedFiles = [...files].sort((a, b) => b.name.localeCompare(a.name));
         }
 
-        fileList.innerHTML = sortedFiles.map(file => `
+        fileList.innerHTML = sortedFiles.map(file => \`
           <li class="file-item">
             <a href="${file.name}${file.isDirectory ? '/' : ''}">${file.name}</a>
           </li>
-        `).join('');
+        \`).join('');
       }</script>
   `;
 
