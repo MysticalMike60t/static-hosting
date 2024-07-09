@@ -4,14 +4,17 @@ const path = require("path");
 const rootDir = "./public";
 
 function generateIndex(dir) {
-  const files = fs.readdirSync(dir).map((file) => {
-    const filePath = path.join(dir, file);
-    const stats = fs.statSync(filePath);
-    return {
-      name: file,
-      isDirectory: stats.isDirectory(),
-    };
-  }).filter(file => file.name !== "index.html");
+  const files = fs
+    .readdirSync(dir)
+    .map((file) => {
+      const filePath = path.join(dir, file);
+      const stats = fs.statSync(filePath);
+      return {
+        name: file,
+        isDirectory: stats.isDirectory(),
+      };
+    })
+    .filter((file) => file.name !== "index.html");
 
   const relativeDir = path.relative(rootDir, dir).replace(/\\/g, "/");
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
@@ -19,14 +22,14 @@ function generateIndex(dir) {
   function getDirectoryInfo(dir) {
     let totalSize = 0;
     let fileCount = 0;
-  
+
     function calculateDirSize(directory) {
       const files = fs.readdirSync(directory);
-  
-      files.forEach(file => {
+
+      files.forEach((file) => {
         const filePath = path.join(directory, file);
         const stats = fs.statSync(filePath);
-  
+
         if (stats.isDirectory()) {
           calculateDirSize(filePath);
         } else if (file !== "index.html") {
@@ -35,9 +38,9 @@ function generateIndex(dir) {
         }
       });
     }
-  
+
     calculateDirSize(dir);
-  
+
     return { totalSize, fileCount };
   }
 
@@ -68,15 +71,119 @@ function generateIndex(dir) {
         </style>
       </head>
       <body>
-        <a class="go-home" href="${parentDir ? `/${parentDir}` : "/"}" rel="noopener noreferrer" target="_self">Go to <span>..</span></a>
+        <a class="go-home" href="${
+          parentDir ? `/${parentDir}` : "/"
+        }" rel="noopener noreferrer" target="_self">Go to <span>..</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
         <div class="files">
           <ul id="fileList">
-            ${files.map(file => `
-              <li class="file-item">
-                <a href="${relativeDir ? `/${relativeDir}` : ""}/${file.name}${file.isDirectory ? "/" : ""}" data-name="${file.name}" data-is-directory="${file.isDirectory}" style="${file.isDirectory ? "background: #ae7ce4; color: rgb(25,25,25); padding: 0 20px; border-radius: 5px;" : ""}">${file.name}</a>
-              </li>`).join("")}
+            ${files
+              .map((file) => {
+                let bgcolor = "transparent";
+                let txtcolor = "#ae7ce4";
+                if (file.name.endsWith(".html")) {
+                  bgcolor = "#e34f26";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".js") ||
+                  file.name.endsWith(".json")
+                ) {
+                  bgcolor = "#f7df1e";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".css")) {
+                  bgcolor = "#264de4";
+                  txtcolor = "white";
+                } else if (
+                  file.name.endsWith(".scss") ||
+                  file.name.endsWith(".sass")
+                ) {
+                  bgcolor = "#cc6699";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".md")) {
+                  bgcolor = "#005b96";
+                  txtcolor = "white";
+                } else if (
+                  file.name.endsWith(".mp4") ||
+                  file.name.endsWith(".mov") ||
+                  file.name.endsWith(".ffmpeg")
+                ) {
+                  bgcolor = "#438496";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".xml")) {
+                  bgcolor = "#1cbd2a";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".svg")) {
+                  bgcolor = "#e6e148";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".png") ||
+                  file.name.endsWith(".jpg") ||
+                  file.name.endsWith(".jpeg")
+                ) {
+                  bgcolor = "#48c7e6";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".exe") ||
+                  file.name.endsWith(".msi")
+                ) {
+                  bgcolor = "#c5dde3";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".dll") ||
+                  file.name.endsWith(".cpl")
+                ) {
+                  bgcolor = "#d4c5e3";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".ini")) {
+                  bgcolor = "#e3e0c5";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".pdf")) {
+                  bgcolor = "#d76c5b";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".zip") ||
+                  file.name.endsWith(".7z") ||
+                  file.name.endsWith(".tar.gz")
+                ) {
+                  bgcolor = "#e7a923";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".wav") ||
+                  file.name.endsWith(".mp3")
+                ) {
+                  bgcolor = "#d765d1";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".ico")) {
+                  bgcolor = "#65acd7";
+                  txtcolor = "black";
+                } else if (
+                  file.name.endsWith(".bat") ||
+                  file.name.endsWith(".sh") ||
+                  file.name.endsWith(".ps1")
+                ) {
+                  bgcolor = "#cdeee9";
+                  txtcolor = "black";
+                } else if (file.name.endsWith(".webp")) {
+                  bgcolor = "#36a62c";
+                  txtcolor = "black";
+                }
+                return `
+                <li class="file-item">
+                  <a href="${relativeDir ? `/${relativeDir}` : ""}/${
+                  file.name
+                }${file.isDirectory ? "/" : ""}" data-name="${
+                  file.name
+                }" data-is-directory="${
+                  file.isDirectory
+                }" style="padding: 0 20px; border-radius: 5px;${
+                  file.isDirectory
+                    ? "background: #ae7ce4; color: rgb(25,25,25);"
+                    : `background:${bgcolor};color:${txtcolor};`
+                }">${file.name}</a>
+                </li>`;
+              })
+              .join("")}
           </ul>
         </div>
         <div class="file-info">
