@@ -14,7 +14,9 @@ function generateIndex(dir) {
         isDirectory: stats.isDirectory(),
       };
     })
-    .filter((file) => file.name !== "index.html");
+    .filter((file) => file.name !== "index.html")
+    .filter((file) => file.name !== ".gitkeep")
+    .filter((file) => file.name !== ".gitignore");
 
   const relativeDir = path.relative(rootDir, dir).replace(/\\/g, "/");
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
