@@ -3,6 +3,42 @@ const path = require("path");
 
 const rootDir = "./public";
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+}
+
+function getDirectoryInfo(dir) {
+  let totalSize = 0;
+  let fileCount = 0;
+
+  function calculateDirSize(directory) {
+    const files = fs.readdirSync(directory);
+    files.forEach((file) => {
+      const filePath = path.join(directory, file);
+      const stats = fs.statSync(filePath);
+      if (stats.isDirectory()) {
+        calculateDirSize(filePath);
+      } else if (file !== "index.html") {
+        totalSize += stats.size;
+        fileCount += 1;
+      }
+    });
+  }
+
+  calculateDirSize(dir);
+
+  return {
+    totalSizeBytes: totalSize,
+    totalSizeFormatted: formatBytes(totalSize),
+    fileCount,
+  };
+}
+
 function generateIndex(dir) {
   const files = fs
     .readdirSync(dir)
@@ -14,37 +50,13 @@ function generateIndex(dir) {
         isDirectory: stats.isDirectory(),
       };
     })
-    .filter((file) => file.name !== "index.html")
-    .filter((file) => file.name !== ".gitkeep")
-    .filter((file) => file.name !== ".gitignore");
+    .filter(
+      (file) => !["index.html", ".gitkeep", ".gitignore"].includes(file.name)
+    );
 
   const relativeDir = path.relative(rootDir, dir).replace(/\\/g, "/");
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
-
-  function getDirectoryInfo(dir) {
-    let totalSize = 0;
-    let fileCount = 0;
-
-    function calculateDirSize(directory) {
-      const files = fs.readdirSync(directory);
-
-      files.forEach((file) => {
-        const filePath = path.join(directory, file);
-        const stats = fs.statSync(filePath);
-
-        if (stats.isDirectory()) {
-          calculateDirSize(filePath);
-        } else if (file !== "index.html") {
-          totalSize += stats.size;
-          fileCount += 1;
-        }
-      });
-    }
-
-    calculateDirSize(dir);
-
-    return { totalSize, fileCount };
-  }
+  const dirInfo = getDirectoryInfo(dir);
 
   const content = `
     <!doctype html>
@@ -222,14 +234,12 @@ function generateIndex(dir) {
 
                 let bgcolor = "transparent";
                 let txtcolor = "#ae7ce4";
-
                 const extension = Object.keys(fileColorMap).find((ext) =>
                   file.name.endsWith(ext)
                 );
                 if (extension) {
                   ({ bgcolor, txtcolor } = fileColorMap[extension]);
                 }
-
                 return `
                 <li class="file-item">
                   <a href="${relativeDir ? `/${relativeDir}` : ""}/${
@@ -249,8 +259,8 @@ function generateIndex(dir) {
           </ul>
         </div>
         <div class="file-info">
-          <p>Total size: ${getDirectoryInfo(dir).totalSize} bytes</p>
-          <p>Number of files: ${getDirectoryInfo(dir).fileCount}</p>
+          <p>Total size: ${dirInfo.totalSizeFormatted}</p>
+          <p>Number of files: ${dirInfo.fileCount}</p>
         </div>
         <script>
           function filterFiles() {
