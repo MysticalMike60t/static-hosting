@@ -76,8 +76,8 @@ function generateIndex(dir) {
           li { width: 100%; height: auto; background: rgba(0, 0, 0, .1); display: flex; align-items: center; justify-content: flex-start; flex-direction: row; padding: 5px; padding-top: 0; border-bottom: 1px solid var(--color-accent-hover); }
           li:hover { background: rgba(0, 0, 0, .2); }
           li:last-child { border-bottom: none; }
-          a { text-decoration: none; color: var(--color-accent); }
-          a:hover { text-decoration: underline; color: var(--color-accent-hover); }
+          a, a span { text-decoration: none; color: var(--color-accent); }
+          a:hover, a:hover span { text-decoration: underline; color: var(--color-accent-hover); }
           .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 10px; border: none; outline: 0; border-radius: 5px; font-size: 1em; background: #2d2d2d; }
           .go-home { margin: 20px; }
           .go-home span { color: var(--color-accent) !important; }
@@ -87,7 +87,7 @@ function generateIndex(dir) {
       <body>
         <a class="go-home" href="${
           parentDir ? `/${parentDir}` : "/"
-        }" rel="noopener noreferrer" target="_self">Go to <span>..</span></a>
+        }" rel="noopener noreferrer" target="_self" style="font-size:1.5em;">..<span style="font-size:0.5em;font-weight:900;">/</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
         <div class="files">
@@ -248,7 +248,7 @@ function generateIndex(dir) {
                   file.name
                 }" data-is-directory="${
                   file.isDirectory
-                }" style="padding: 0 20px; border-radius: 5px;${
+                }" style="padding: 0 20px; border-radius: 2px;${
                   file.isDirectory
                     ? "background: #ae7ce4; color: rgb(25,25,25);"
                     : `background:${bgcolor};color:${txtcolor};`
