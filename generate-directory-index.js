@@ -82,11 +82,10 @@ function generateIndex(dir) {
           .go-home { margin: 20px; }
           .go-home span { color: var(--color-accent) !important; }
           .file-info { gap: 10px;display: flex;align-items: center;justify-content: flex-start;flex-wrap: wrap;margin-bottom: 10px; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; padding: 5px 20px; color: #fff; }
-          .file-info p { padding: 0;margin: 0;position: relative; }
-          .file-info p::after { content: "";display: block;width: 2px;height: 100%;right: -6px;top: 0;background: rgba(255,255,255,0.1);position: absolute;border-radius: 5px; }
-          .file-info p:last-child::after { display: none; }
+          .file-info p { padding: 0;margin: 0;position: relative;border-right: 1px solid rgba(255,255,255,0.1);padding-right: 10px;color: rgb(200,200,200); }
+          .file-info p:last-child { border-right: none;}
           @media (max-width: 550px) {
-            .file-info p::after { display: none; }
+            .file-info p { border-right: none; }
           }
           </style>
       </head>
