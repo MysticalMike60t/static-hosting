@@ -78,11 +78,17 @@ function generateIndex(dir) {
           li:last-child { border-bottom: none; }
           a, a span { text-decoration: none; color: var(--color-accent); }
           a:hover, a:hover span { text-decoration: underline; color: var(--color-accent-hover); }
-          .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 10px; border: none; outline: 0; border-radius: 5px; font-size: 1em; background: #2d2d2d; }
+          .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 20px; border: none; outline: 0; border-radius: 5px; font-size: 1em; background: #2d2d2d; }
           .go-home { margin: 20px; }
           .go-home span { color: var(--color-accent) !important; }
-          .file-info { margin-top: 20px; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; padding: 0 20px; color: #fff; }
-        </style>
+          .file-info { gap: 10px;display: flex;align-items: center;justify-content: flex-start;flex-wrap: wrap;margin-bottom: 10px; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; padding: 5px 20px; color: #fff; }
+          .file-info p { padding: 0;margin: 0;position: relative; }
+          .file-info p::after { content: "";display: block;width: 2px;height: 100%;right: -6px;top: 0;background: rgba(255,255,255,0.1);position: absolute;border-radius: 5px; }
+          .file-info p:last-child::after { display: none; }
+          @media (max-width: 550px) {
+            .file-info p::after { display: none; }
+          }
+          </style>
       </head>
       <body>
         <a class="go-home" href="${
@@ -90,6 +96,10 @@ function generateIndex(dir) {
         }" rel="noopener noreferrer" target="_self" style="font-size:1.5em;">..<span style="font-size:0.5em;font-weight:900;">/</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
+        <div class="file-info">
+          <p>Total size: ${dirInfo.totalSizeFormatted}</p>
+          <p>Number of files: ${dirInfo.fileCount}</p>
+        </div>
         <div class="files">
           <ul id="fileList">
             ${files
@@ -257,10 +267,6 @@ function generateIndex(dir) {
               })
               .join("")}
           </ul>
-        </div>
-        <div class="file-info">
-          <p>Total size: ${dirInfo.totalSizeFormatted}</p>
-          <p>Number of files: ${dirInfo.fileCount}</p>
         </div>
         <script>
           function filterFiles() {
