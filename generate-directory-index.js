@@ -3,6 +3,7 @@ const path = require("path");
 
 const rootDir = "./public";
 
+const settings = JSON.parse(fs.readFileSync("settings.json", "utf-8"));
 const theme = JSON.parse(fs.readFileSync("theme.json", "utf-8"));
 
 function getFilterList(filePath) {
@@ -17,7 +18,7 @@ function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const sizes = settings.file_sizes;
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
@@ -28,12 +29,14 @@ function getDirectoryInfo(dir) {
 
   function calculateDirSize(directory) {
     const files = fs.readdirSync(directory);
+    const filterList = getFilterList(".exclude");
     files.forEach((file) => {
       const filePath = path.join(directory, file);
       const stats = fs.statSync(filePath);
+      const filterList = getFilterList(".exclude");
       if (stats.isDirectory()) {
         calculateDirSize(filePath);
-      } else if (file !== "index.html") {
+      } else if (!filterList.includes(file)) {
         totalSize += stats.size;
         fileCount += 1;
       }
