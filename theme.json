@@ -1,5 +1,66 @@
 {
+  "media_query": {
+    "use_query": "true",
+    "file_info": {
+      "remove_seperator": "550px"
+    }
+  },
+  "element_styles": {
+    "parent_dir": {
+      "font_size": "1.5em",
+      "slash": {
+        "font_size": "0.5em",
+        "font_weight": "900"
+      }
+    },
+    "files": {
+      "border_radius": "5px"
+    },
+    "file": {
+      "border_radius": "5px"
+    },
+    "file_info": {
+      "border_radius": "5px"
+    },
+    "search": {
+      "border_radius": "5px"
+    }
+  },
   "colors": {
+    "text": {
+      "general": "#fff"
+    },
+    "accent": {
+      "default": "#ae7ce4",
+      "hover": " #75559f"
+    },
+    "background": {
+      "default": "#191919"
+    },
+    "elements": {
+      "search": {
+        "background": "#2d2d2d"
+      },
+      "files": {
+        "background": "#232323",
+        "shadow": "rgba(0, 0, 0, 0.1)"
+      },
+      "li_file": {
+        "default": "rgba(0, 0, 0, .1)",
+        "hover": "rgba(0, 0, 0, .2)"
+      },
+      "file_info": {
+        "text_color": "rgb(200,200,200)",
+        "background": "#232323",
+        "seperator": "rgba(255,255,255,0.1)"
+      },
+      "file": {
+        "is_folder": {
+          "text_color": "rgb(25,25,25)",
+          "background": "#ae7ce4"
+        }
+      }
+    },
     "files": {
       ".7z": { "bgcolor": "#e7a923", "txtcolor": "black" },
       ".aac": { "bgcolor": "#d9e79e", "txtcolor": "black" },

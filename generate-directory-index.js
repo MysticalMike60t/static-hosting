@@ -3,6 +3,8 @@ const path = require("path");
 
 const rootDir = "./public";
 
+const theme = JSON.parse(fs.readFileSync("theme.json", "utf-8"));
+
 function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -58,8 +60,6 @@ function generateIndex(dir) {
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
   const dirInfo = getDirectoryInfo(dir);
 
-  const theme = JSON.parse(fs.readFileSync("theme.json", "utf-8"));
-
   const content = `
     <!doctype html>
     <html lang="en">
@@ -68,33 +68,67 @@ function generateIndex(dir) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${relativeDir || "/"}</title>
         <style>
-          * { --color-accent: #ae7ce4; --color-accent-hover: #75559f; }
-          *, ::after, ::before { box-sizing: border-box; color: #fff; }
+          * { --color-accent: ${
+            theme.colors.accent.default
+          }; --color-accent-hover: ${theme.colors.accent.hover}; }
+          *, ::after, ::before { box-sizing: border-box; color: ${
+            theme.colors.text.general
+          }; }
           :root { font-family: "Segoe UI", "Segoe UI Bold", "Segoe UI Italic", sans-serif; }
-          body { background: #191919; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; padding: 20px 10px; }
+          body { background: ${
+            theme.colors.background.default
+          }; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; padding: 20px 10px; }
           .title { font-size: 2em; }
-          .files { max-width: 100%; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; box-shadow: 0 0 5px 0 rgba(0, 0, 0, .1); padding: 5px 20px; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; }
+          .files { max-width: 100%; width: 80%; min-width: 300px; background: ${
+            theme.colors.elements.files.background
+          }; border-radius: ${
+    theme.element_styles.files.border_radius
+  }; box-shadow: 0 0 5px 0 ${
+    theme.colors.elements.files.shadow
+  }; padding: 5px 20px; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; }
           ul { width: 100%; margin: 0; padding: 0; list-style: none; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; gap: 5px; }
-          li { width: 100%; height: auto; background: rgba(0, 0, 0, .1); display: flex; align-items: center; justify-content: flex-start; flex-direction: row; padding: 5px; padding-top: 0; border-bottom: 1px solid var(--color-accent-hover); }
-          li:hover { background: rgba(0, 0, 0, .2); }
+          li { width: 100%; height: auto; background: ${
+            theme.colors.elements.li_file.default
+          }; display: flex; align-items: center; justify-content: flex-start; flex-direction: row; padding: 5px; padding-top: 0; border-bottom: 1px solid var(--color-accent-hover); }
+          li:hover { background: ${theme.colors.elements.li_file.hover}; }
           li:last-child { border-bottom: none; }
           a, a span { text-decoration: none; color: var(--color-accent); }
           a:hover, a:hover span { text-decoration: underline; color: var(--color-accent-hover); }
-          .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 20px; border: none; outline: 0; border-radius: 5px; font-size: 1em; background: #2d2d2d; }
+          .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 20px; border: none; outline: 0; border-radius: ${
+            theme.element_styles.search.border_radius
+          }; font-size: 1em; background:${
+    theme.colors.elements.search.background
+  }; }
           .go-home { margin: 20px; }
           .go-home span { color: var(--color-accent) !important; }
-          .file-info { gap: 10px;display: flex;align-items: center;justify-content: flex-start;flex-wrap: wrap;margin-bottom: 10px; width: 80%; min-width: 300px; background: #232323; border-radius: 5px; padding: 5px 20px; color: #fff; }
-          .file-info p { padding: 0;margin: 0;position: relative;border-right: 1px solid rgba(255,255,255,0.1);padding-right: 10px;color: rgb(200,200,200); }
+          .file-info { gap: 10px;display: flex;align-items: center;justify-content: flex-start;flex-wrap: wrap;margin-bottom: 10px; width: 80%; min-width: 300px; background: ${
+            theme.colors.elements.file_info.background
+          }; border-radius: ${
+    theme.element_styles.file_info.border_radius
+  }; padding: 5px 20px; color: ${theme.colors.elements.file_info.text_color}; }
+          .file-info p { padding: 0;margin: 0;position: relative;border-right: 1px solid ${
+            theme.colors.elements.file_info.seperator
+          };padding-right: 10px; }
           .file-info p:last-child { border-right: none;}
-          @media (max-width: 550px) {
+          ${
+            theme.media_query.use_query === "true"
+              ? `@media (max-width: ${theme.media_query.file_info.remove_seperator}) {
             .file-info p { border-right: none; }
+          }`
+              : ""
           }
           </style>
       </head>
       <body>
         <a class="go-home" href="${
           parentDir ? `/${parentDir}` : "/"
-        }" rel="noopener noreferrer" target="_self" style="font-size:1.5em;">..<span style="font-size:0.5em;font-weight:900;">/</span></a>
+        }" rel="noopener noreferrer" target="_self" style="font-size:${
+    theme.element_styles.parent_dir.font_size
+  }">..<span style="font-size:${
+    theme.element_styles.parent_dir.slash.font_size
+  };font-weight:${
+    theme.element_styles.parent_dir.slash.font_weight
+  };">/</span></a>
         <h1 class="title">${relativeDir || "/"}</h1>
         <input class="search" id="search" onkeyup="filterFiles()" placeholder="Search files...">
         <div class="file-info">
@@ -105,11 +139,10 @@ function generateIndex(dir) {
           <ul id="fileList">
             ${files
               .map((file) => {
-
                 // ".": { bgcolor: "#", txtcolor: "black" },
 
                 let bgcolor = "transparent";
-                let txtcolor = "#ae7ce4";
+                let txtcolor = theme.colors.accent.default;
                 const extension = Object.keys(theme.colors.files).find((ext) =>
                   file.name.endsWith(ext)
                 );
@@ -124,9 +157,11 @@ function generateIndex(dir) {
                   file.name
                 }" data-is-directory="${
                   file.isDirectory
-                }" style="padding: 0 20px; border-radius: 2px;${
+                }" style="padding: 0 20px; border-radius: ${
+                  theme.element_styles.file.border_radius
+                };${
                   file.isDirectory
-                    ? "background: #ae7ce4; color: rgb(25,25,25);"
+                    ? `background: ${theme.colors.elements.file.is_folder.background}; color: ${theme.colors.elements.file.is_folder.text_color};`
                     : `background:${bgcolor};color:${txtcolor};`
                 }">${file.name}</a>
                 </li>`;
