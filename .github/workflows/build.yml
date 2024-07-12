@@ -33,18 +33,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./public
+        working-directory: ./
 
       - name: Build project
         run: node generate-directory-index.js
-        working-directory: ./public
+        working-directory: ./
 
       - name: Save build artifacts
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: ./public/build  # Adjust the path based on your build output, if needed
+          path: ./public
   deploy:
     environment:
       name: github-pages
