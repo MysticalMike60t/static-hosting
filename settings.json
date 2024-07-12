@@ -1,5 +1,17 @@
 {
-  "file_sizes": ["Bytes", "KB", "MB", "GB", "TB"],
-  "file_size_decimals": 2,
-  "filter_file": ".exclude"
+  "root": {
+    "directory": "./public"
+  },
+  "encoding": "utf-8",
+  "files": {
+    "theme": "theme.json",
+    "meta_tags": "components/meta_tags.html",
+    "seo_tags": "components/seo_tags.html",
+    "filter": ".exclude"
+  },
+  "size": {
+    "empty_message": "0 Bytes",
+    "sizes": ["Bytes", "KB", "MB", "GB", "TB"],
+    "decimals": 2
+  }
 }

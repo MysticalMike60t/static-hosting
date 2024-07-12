@@ -1,24 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 
-const rootDir = "./public";
-
 const settings = JSON.parse(fs.readFileSync("settings.json", "utf-8"));
-const theme = JSON.parse(fs.readFileSync("theme.json", "utf-8"));
+const theme = JSON.parse(fs.readFileSync(settings.files.theme, settings.encoding));
+
+const rootDir = settings.root.directory;
 
 function getFilterList(filePath) {
-  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const fileContent = fs.readFileSync(filePath, settings.encoding);
   return fileContent
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 }
 
-function formatBytes(bytes, decimals = settings.file_size_decimals) {
-  if (bytes === 0) return "0 Bytes";
+function formatBytes(bytes, decimals = settings.size.decimals) {
+  if (bytes === 0) return settings.size.empty_message;
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
-  const sizes = settings.file_sizes;
+  const sizes = settings.size.sizes;
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
@@ -32,7 +32,7 @@ function getDirectoryInfo(dir) {
     files.forEach((file) => {
       const filePath = path.join(directory, file);
       const stats = fs.statSync(filePath);
-      const filterList = getFilterList(settings.filter_file);
+      const filterList = getFilterList(settings.files.filter);
       if (stats.isDirectory()) {
         calculateDirSize(filePath);
       } else if (!filterList.includes(file)) {
@@ -52,7 +52,7 @@ function getDirectoryInfo(dir) {
 }
 
 function generateIndex(dir) {
-  const filterList = getFilterList(settings.filter_file);
+  const filterList = getFilterList(settings.files.filter);
   const files = fs
     .readdirSync(dir)
     .map((file) => {
@@ -69,12 +69,17 @@ function generateIndex(dir) {
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
   const dirInfo = getDirectoryInfo(dir);
 
+  const metaTags = fs.readFileSync(settings.files.meta_tags, settings.encoding);
+  const seoTags = fs.readFileSync(settings.files.seo_tags, settings.encoding);
+
   const content = `
     <!doctype html>
     <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        ${metaTags}
+        ${seoTags}
         <title>${relativeDir || "/"}</title>
         <style>
           * { --color-accent: ${
@@ -83,7 +88,7 @@ function generateIndex(dir) {
           *, ::after, ::before { box-sizing: border-box; color: ${
             theme.colors.text.general
           }; }
-          :root { font-family: "Segoe UI", "Segoe UI Bold", "Segoe UI Italic", sans-serif; }
+          :root { font-family: ${theme.general.font_family}; }
           body { background: ${
             theme.colors.background.default
           }; display: flex; align-items: center; justify-content: flex-start; flex-direction: column; padding: 20px 10px; }
@@ -101,7 +106,9 @@ function generateIndex(dir) {
           }; display: flex; align-items: center; justify-content: flex-start; flex-direction: row; padding: 5px; padding-top: 0; border-bottom: 1px solid var(--color-accent-hover); }
           li:hover { background: ${theme.colors.elements.li_file.hover}; }
           li:last-child { border-bottom: none; }
-          a, a span { text-decoration: none; color: var(--color-accent); }
+          a, a span { text-decoration: ${
+            theme.general.link.underline === "true" ? "underline" : "none"
+          }; color: var(--color-accent); }
           a:hover, a:hover span { text-decoration: underline; color: var(--color-accent-hover); }
           .search { width: 100%; max-width: 600px; padding: 5px 10px; margin-bottom: 20px; border: none; outline: 0; border-radius: ${
             theme.element_styles.search.border_radius
