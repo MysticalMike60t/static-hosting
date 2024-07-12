@@ -29,7 +29,6 @@ function getDirectoryInfo(dir) {
 
   function calculateDirSize(directory) {
     const files = fs.readdirSync(directory);
-    const filterList = getFilterList(".exclude");
     files.forEach((file) => {
       const filePath = path.join(directory, file);
       const stats = fs.statSync(filePath);
