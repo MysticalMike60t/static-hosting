@@ -192,7 +192,19 @@
       ".vcf": { "bgcolor": "#e1d2f3", "txtcolor": "black" },
       ".gpx": { "bgcolor": "#e1d2f3", "txtcolor": "black" },
       ".tmp": { "bgcolor": "#e1d2f3", "txtcolor": "black" },
-      ".old": { "bgcolor": "#e1d2f3", "txtcolor": "black" }
+      ".old": { "bgcolor": "#e1d2f3", "txtcolor": "black" },
+      ".c": { "bgcolor": "#70788b", "txtcolor": "black" },
+      ".cfg": { "bgcolor": "#bdc3d0", "txtcolor": "black" },
+      ".cab": { "bgcolor": "#bdc3d0", "txtcolor": "black" },
+      ".cda": { "bgcolor": "#bdc3d0", "txtcolor": "black" },
+      ".cgi": { "bgcolor": "#bdc3d0", "txtcolor": "black" },
+      ".cmd": { "bgcolor": "#bdc3d0", "txtcolor": "black" },
+      ".cs": { "bgcolor": "#79e139", "txtcolor": "black" },
+      ".com": { "bgcolor": "#e13964", "txtcolor": "black" },
+      ".shtml": { "bgcolor": "#e34f26", "txtcolor": "black" },
+      ".xhtml": { "bgcolor": "#e34f26", "txtcolor": "black" },
+      ".xlr": { "bgcolor": "#1f9d3b", "txtcolor": "black" },
+      ".xpi": { "bgcolor": "#1f9d3b", "txtcolor": "black" }
     }
   }
 }
