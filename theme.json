@@ -1,4 +1,12 @@
 {
+  "general": {
+    "text_color": "#fff",
+    "font_family": "'Segoe UI', 'Segoe UI Bold', 'Segoe UI Italic, sans-serif'",
+    "link": {
+      "underline": "true"
+    },
+    "border_radius": "5px"
+  },
   "media_query": {
     "use_query": "true",
     "file_info": {
