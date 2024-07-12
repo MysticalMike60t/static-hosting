@@ -5,6 +5,14 @@ const rootDir = "./public";
 
 const theme = JSON.parse(fs.readFileSync("theme.json", "utf-8"));
 
+function getFilterList(filePath) {
+  const fileContent = fs.readFileSync(filePath, "utf-8");
+  return fileContent
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+}
+
 function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -42,6 +50,7 @@ function getDirectoryInfo(dir) {
 }
 
 function generateIndex(dir) {
+  const filterList = getFilterList(".exclude");
   const files = fs
     .readdirSync(dir)
     .map((file) => {
@@ -52,9 +61,7 @@ function generateIndex(dir) {
         isDirectory: stats.isDirectory(),
       };
     })
-    .filter(
-      (file) => !["index.html", ".gitkeep", ".gitignore"].includes(file.name)
-    );
+    .filter((file) => !filterList.includes(file.name));
 
   const relativeDir = path.relative(rootDir, dir).replace(/\\/g, "/");
   const parentDir = relativeDir.split("/").slice(0, -1).join("/") || "";
