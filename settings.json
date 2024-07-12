@@ -1,3 +1,5 @@
 {
-  "file_sizes": ["Bytes", "KB", "MB", "GB", "TB"]
+  "file_sizes": ["Bytes", "KB", "MB", "GB", "TB"],
+  "file_size_decimals": 2,
+  "filter_file": ".exclude"
 }

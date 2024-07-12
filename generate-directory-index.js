@@ -14,7 +14,7 @@ function getFilterList(filePath) {
     .filter((line) => line.length > 0);
 }
 
-function formatBytes(bytes, decimals = 2) {
+function formatBytes(bytes, decimals = settings.file_size_decimals) {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
@@ -32,7 +32,7 @@ function getDirectoryInfo(dir) {
     files.forEach((file) => {
       const filePath = path.join(directory, file);
       const stats = fs.statSync(filePath);
-      const filterList = getFilterList(".exclude");
+      const filterList = getFilterList(settings.filter_file);
       if (stats.isDirectory()) {
         calculateDirSize(filePath);
       } else if (!filterList.includes(file)) {
@@ -52,7 +52,7 @@ function getDirectoryInfo(dir) {
 }
 
 function generateIndex(dir) {
-  const filterList = getFilterList(".exclude");
+  const filterList = getFilterList(settings.filter_file);
   const files = fs
     .readdirSync(dir)
     .map((file) => {
