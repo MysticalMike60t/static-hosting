@@ -3,7 +3,7 @@ const path = require("path");
 
 const config = require("./config.js");
 const { generateStyles } = require("./styles.js");
-const { generateHtml } = require("./template.js");
+const { generateHtml, generateAllFilesHtml } = require("./template.js");
 
 function readFileContent(filePath) {
   return fs.readFileSync(filePath, config.encoding);
@@ -97,4 +97,51 @@ function generateIndex(dir) {
     .forEach((file) => generateIndex(path.join(dir, file.name)));
 }
 
+function getAllFiles(dir, fileList = []) {
+  const files = fs.readdirSync(dir);
+  const filterList = getFilterList();
+
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+    const stats = fs.statSync(filePath);
+    const relativePath = path.relative(config.root.directory, filePath).replace(/\\/g, "/");
+
+    if (stats.isDirectory()) {
+      getAllFiles(filePath, fileList);
+    } else if (!filterList.includes(file)) {
+      fileList.push({
+        name: file,
+        path: relativePath,
+        size: formatBytes(stats.size),
+        lastModified: stats.mtime.toISOString().split('T')[0]
+      });
+    }
+  });
+
+  return fileList;
+}
+
+function generateAllFilesPage() {
+  const allFiles = getAllFiles(config.root.directory);
+  const publicDir = path.join(config.root.directory, '.');
+  
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir);
+  }
+
+  const metaTags = readFileContent(config.files.meta_tags);
+  const seoTags = readFileContent(config.files.seo_tags);
+  const styles = generateStyles("all-files");
+
+  const htmlContent = generateAllFilesHtml({
+    allFiles,
+    metaTags,
+    seoTags,
+    styles,
+  });
+
+  fs.writeFileSync(path.join(publicDir, "all-files.html"), htmlContent);
+}
+
 generateIndex(config.root.directory);
+generateAllFilesPage();
